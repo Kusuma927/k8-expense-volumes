@@ -25,7 +25,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-normal
+  name: mysql
   namespace: expense
   labels:
     app: mysql
@@ -46,27 +46,27 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mysql
-  project: expense
+  namespace: expense
 spec:
   selector:
     matchLabels:
-       name: mysql
-       project: expense
-       tier: db # has to match .spec.template.metadata.labels
+      app: mysql
+      project: expense
+      tier: db # has to match .spec.template.metadata.labels
   serviceName: "mysql-headless"
   replicas: 2 # by default is 1
   minReadySeconds: 10 # by default is 0
   template:
     metadata:
       labels:
-         name: mysql
-         project: expense
-         tier: db # has to match .spec.selector.matchLabels
+        app: mysql
+        project: expense
+        tier: db # has to match .spec.selector.matchLabels
     spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: mysql
-        image: kusumab/mysql:1.0.0 
+        image: kusumab/mysql:1.0.0
         volumeMounts:
         - name: mysql
           mountPath: /var/lib/mysql
